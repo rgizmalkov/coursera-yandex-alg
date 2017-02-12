@@ -1,8 +1,6 @@
 package DataStructure.Week_01;
 
-import java.util.Set;
-import java.util.Stack;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  Problem Description
@@ -33,28 +31,43 @@ import java.util.TreeSet;
  Memory Limit. 512MB.
  */
 public class CheckBrackets {
-    private Stack<Character> array;
+    private final Map<Character,Character> check;
+    private Stack<Node> array;
+
+    private class Node{
+        char ch;
+        int position;
+
+        public Node(char ch, int position) {
+            this.ch = ch;
+            this.position = position;
+        }
+    }
 
     public CheckBrackets(){
-        this.array = new Stack<Character>();
+        this.array = new Stack<Node>();
+        this.check = new HashMap<>();
+        check.put('{', '}');
+        check.put('[', ']');
+        check.put('(', ')');
     }
 
     public int method(String line){
-
         for (int i = 0; i < line.length(); i++) {
             Character ch = line.charAt(i);
             if( '(' == ch  || '{' == ch  || '[' == ch){
-                array.add(ch);
+                array.add(new Node(ch, i+1));
             }else if(')' == ch  || '}' == ch  || ']' == ch){
-                Character popped = array.pop();
-
+                if(array.empty()) return i+1;
+                Character popped = array.pop().ch;
+                if(!check(popped, ch)) return i+1;
             }
-
         }
+        return array.empty() ? -1 : array.pop().position;
+    }
 
-
-        clean();
-        return 0;
+    private boolean check(Character popped, Character val) {
+        return check.get(popped) == val;
     }
 
     private void clean(){
@@ -62,17 +75,10 @@ public class CheckBrackets {
     }
 
     public static void main(String[] args) {
-        Character ch = '[';
-        Character ch1 = ']';
-        Character ch2 = '{';
-        Character ch3 = '}';
-        Character ch4 = '(';
-        Character ch5 = ')';
-        System.out.println(ch.hashCode());
-        System.out.println(ch1.hashCode());
-        System.out.println(ch2.hashCode());
-        System.out.println(ch3.hashCode());
-        System.out.println(ch4.hashCode());
-        System.out.println(ch5.hashCode());
+        Scanner sc = new Scanner(System.in);
+        String line = sc.nextLine();
+        CheckBrackets checkBrackets = new CheckBrackets();
+        int val = checkBrackets.method(line);
+        System.out.println(val > 0 ? val : "Success");
     }
 }
