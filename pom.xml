@@ -8,5 +8,21 @@
     <artifactId>Coursera.Algorithms.Yandex</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <maven.vompile.plugin>3.6.1</maven.vompile.plugin>
+    </properties>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.vompile.plugin}</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
