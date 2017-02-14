@@ -1,4 +1,4 @@
-//package DataStructure.Week_01;
+package DataStructure.Week_01;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,9 +8,9 @@ import java.util.Scanner;
 /**
  * Created by romanizmalkov on 13.02.17.
  */
-public class NetworkPacketProcessing {
+public class SingleNetworkPacketProcessing {
     public static void main(String[] args) {
-        NetworkPacketProcessing npp = new NetworkPacketProcessing();
+        SingleNetworkPacketProcessing npp = new SingleNetworkPacketProcessing();
         npp.init();
     }
 
@@ -32,16 +32,21 @@ public class NetworkPacketProcessing {
             if (packet.deliveryTime != time) {
                 int diff = packet.deliveryTime - time;
                 for (int tick = 0; tick < diff; tick++) {
-                    buffer.tick(output);
+                    buffer.tick(output, time);
+                    time++;
                 }
-                time = packet.deliveryTime;
             }
-            if(packet.processTime > 0) connect(packet);
-            else if(buffer.isEmpty())output.set(packet.index, packet.timeOfDone);
+            if(packet.processTime == 0 && buffer.isEmpty())
+                output.set(packet.index, time);
+            else
+                connect(packet);
+//            if(packet.processTime > 0) connect(packet);
+//            else if(!buffer.isNonAvailable())output.set(packet.index, time);
         }
 
         while (!buffer.isEmpty()){
-            buffer.tick(output);
+            buffer.tick(output, time);
+            time++;
         }
 
         for (int i = 0; i < output.size(); i++) {
@@ -69,7 +74,7 @@ class NetworkBuffer{
     }
 
     boolean add(Packet p){
-        if(buffer.size() == size)
+        if(isNonAvailable())
             return false;
         else {
             buffer.add(p);
@@ -77,18 +82,29 @@ class NetworkBuffer{
         }
     }
 
-    void tick(List output){
-        for (Packet packet :
-                buffer) {
-            if(packet.done()) {
-                output.set(packet.index, packet.deliveryTime);
-                buffer.remove(packet);
+    void tick(List output, int time){
+        int availablePower = 1;
+            while (availablePower == 1) {
+                if(!buffer.isEmpty()) {
+                    Packet packet = buffer.get(0);
+                    packet.start(time);
+                    if (!(packet.processTime == 0)) availablePower--;
+                    if (packet.done()) {
+                        output.set(packet.index, packet.started);
+                        buffer.remove(packet);
+                    }
+                }else {
+                    break;
+                }
             }
-        }
     }
 
     boolean isEmpty(){
         return buffer.isEmpty();
+    }
+
+    boolean isNonAvailable(){
+        return buffer.size() == size;
     }
 }
 
@@ -97,6 +113,7 @@ class Packet{
     int deliveryTime;
     int processTime;
     int timeOfDone;
+    int started = -2;
 
     public Packet(Integer incomingNumber, int deliveryTime, int processTime) {
         this.index = incomingNumber;
@@ -105,9 +122,14 @@ class Packet{
         this.timeOfDone = deliveryTime;
     }
 
+    public void start(int time){
+        if(started != -2) return;
+        this.started = time;
+    }
+
 
     boolean done(){
-        timeOfDone++;
         return --processTime <= 0;
     }
 }
+
