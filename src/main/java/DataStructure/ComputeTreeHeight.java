@@ -1,7 +1,6 @@
-package DataStructure.Week_01;
+package DataStructure;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 /**
  * Created by elion on 12.02.2017.

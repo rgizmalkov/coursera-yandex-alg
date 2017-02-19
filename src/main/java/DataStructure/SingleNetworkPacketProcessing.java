@@ -1,4 +1,4 @@
-package DataStructure.Week_01;
+package DataStructure;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

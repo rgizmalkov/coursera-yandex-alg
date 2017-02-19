@@ -1,5 +1,7 @@
 package AlgorithmicToolbox.Week_02;
 
+import Utils.annotations.Timing;
+
 import java.math.BigInteger;
 import java.util.Scanner;
 
@@ -13,12 +15,11 @@ public class Fibonacci {
 //        System.out.println(lastDigitOfALargeFibonacciNumber(sc.nextInt()));
 //        long l2 = System.currentTimeMillis();
 //        System.out.println(l2-l1);
-        System.out.println(FibList(3));
-        System.out.println(FibList(9));
 //        for (int i = 0; i < 121; i++) {
 //            System.out.printf("%d, ", FibList(i).remainder(BigInteger.valueOf(10)));
 //            System.out.println(FibList(i).remainder(BigInteger.valueOf(4)));
 //        }
+        FibList(100);
     }
 
     public static int FibRecourse(int n) {
@@ -29,6 +30,7 @@ public class Fibonacci {
         }
     }
 
+    @Timing
     public static BigInteger FibList(int n) {
         if(n <= 1) return BigInteger.valueOf(n);
         BigInteger[] F = new BigInteger[n+1];
